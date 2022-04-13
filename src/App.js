@@ -1,6 +1,9 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 import './App.css';
 import Maps from './components/Maps'
 import Character from './components/Character'
+
 
 function App() {
   return (
