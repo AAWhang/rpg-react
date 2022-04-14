@@ -40,8 +40,8 @@ function Maps() {
                 <div
                   style={{
                     backgroundColor: tileColor,
-                    height: '60px',
-                    width: '60px',
+                    height: '50px',
+                    width: '50px',
                     flexDirection: 'row'
                   }}
                   />

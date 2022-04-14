@@ -36,40 +36,64 @@ function Character() {
   let xPosition = '0'
   let yPosition = '0'
   const handleKeyboardInput = (e) => {
-          if (goUp === true) { //up key
-            yPosition = yPos - 5
-            setyPos(yPosition)
-          }
-          if (goDown === true) { //up key
-            yPosition = yPos + 5
-            setyPos(yPosition)
-          }
-          if (goLeft === true) { //up key
-            xPosition = xPos - 5
-            setxPos(xPosition)
-          }
-          if (goRight === true) { //up key
-            xPosition = xPos + 5
-            setxPos(xPosition)
-          }
+    if (goUp === true) { //up key
+        movement(0, 1)
+      // yPosition = yPos - 5
+      // setyPos(yPosition)
+    }
+    if (goDown === true) { //Down key
+        movement(0, -1)
+      // yPosition = yPos + 5
+      // setyPos(yPosition)
+    }
+    if (goLeft === true) { //Left key
+        movement(-1, 0)
+      // xPosition = xPos - 5
+      // setxPos(xPosition)
+    }
+      if (goRight === true) { //Right key
+        movement(1, 0)
+      // xPosition = xPos + 5
+      // setxPos(xPosition)
+    }
+  }
+
+  function movement(x, y) {
+    if (y == 1) {
+      if (movementCheck(xPos, yPos - 1)) setyPos(yPos - 1)
+    }
+    if (y == -1) {
+      if (movementCheck(xPos, yPos + 1)) setyPos(yPos + 1)
+    }
+    if (x == -1) {
+      if (movementCheck(xPos - 1, yPos)) setxPos(xPos - 1)
+    }
+    if (x == 1) {
+      if (movementCheck(xPos + 1, yPos)) setxPos(xPos + 1)
+    }
+  }
+
+  function movementCheck(x, y) {
+    if (mapdata[y][x] == 1 || mapdata[y][x] == undefined ) return false
+      else return true
   }
 
   return (
 
-        <div
-          style={{
-            backgroundColor: tileColor,
-            height: '60px',
-            width: '60px',
-            marginLeft: xPos,
-            marginTop: yPos,
-            margin: '5px',
-            flexDirection: 'row',
-            position: 'absolute'
-          }}
-          id="inner" tabindex="0"
-          onKeyPress={() => handleKeyboardInput('w')}
-        />
+    <div
+      style={{
+        backgroundColor: tileColor,
+        height: '50px',
+        width: '50px',
+        marginLeft: -1100 + (100 * xPos) - (4 * xPos),
+        marginTop: -800 + (100 * yPos),
+        margin: '5px',
+        flexDirection: 'row',
+        position: 'absolute'
+      }}
+      id="inner" tabindex="0"
+      onKeyPress={() => handleKeyboardInput('w')}
+    />
   );
 }
 
