@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './App.css';
-import Maps from './components/Maps'
-import Character from './components/Character'
+import GEngine from './components/GEngine'
 
 
 function App() {
@@ -10,8 +9,7 @@ function App() {
     <div className="App">
       <header className="App-header">
 
-        <Maps />
-        <Character />
+        <GEngine />
 
       </header>
     </div>

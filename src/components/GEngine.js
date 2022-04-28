@@ -1,9 +1,8 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { useEffect, useRef, useState } from 'react'
-import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Grid';
 import useKeyPress from './use-key-press'
+import Maps from './Maps'
 import Modal from '@mui/material/Modal';
 import Backdrop from '@mui/material/Backdrop';
 import Battle from './RPGBattle/Fight'
@@ -11,9 +10,9 @@ import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import 'reactjs-popup/dist/index.css';
 
-function Character() {
+
+function GEngine() {
   const goUp = useKeyPress('w');
   const goDown = useKeyPress('s');
   const goLeft = useKeyPress('a');
@@ -22,14 +21,10 @@ function Character() {
   const [yPos, setyPos] = useState(0);
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
-  const inputRef = useRef()
-
-  useEffect(() => {
-    inputRef.current.focus()
-  }, [])
+  const [modalMsg, setMsg] = useState('Hi')
 
   let mapdata = [
-    [0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+    [9, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
     [0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0],
     [0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
     [0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1],
@@ -47,9 +42,10 @@ function Character() {
     [0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0],
     [2, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]
   ]
-  let tileColor = 'green'
-  let xPosition = '0'
-  let yPosition = '0'
+
+  const [mapHook, setMap] = useState(mapdata);
+
+
   const handleKeyboardInput = (e) => {
     if (open === false)
       {
@@ -66,20 +62,59 @@ function Character() {
             movement(1, 0)
         }
       }
+      if (open === true)
+        {
+          if (goUp === true) { //up key
+              setMsg("Up")
+          }
+          if (goDown === true) { //Down key
+              setMsg("Down")
+          }
+          if (goLeft === true) { //Left key
+              setMsg("Left")
+          }
+            if (goRight === true) { //Right key
+              setMsg("Right")
+          }
+        }
   }
 
   function movement(x, y) {
     if (y === 1) {
-      if (movementCheck(xPos, yPos - 1)) setyPos(yPos - 1)
+      if (movementCheck(xPos, yPos - 1)) {
+        mapdata = mapHook
+        mapdata[yPos][xPos] = 0
+        mapdata[yPos - 1][xPos] = 9
+        setyPos(yPos - 1)
+        setMap(mapdata)
+      }
     }
     if (y === -1) {
-      if (movementCheck(xPos, yPos + 1)) setyPos(yPos + 1)
+      if (movementCheck(xPos, yPos + 1)) {
+        mapdata = mapHook
+        mapdata[yPos][xPos] = 0
+        mapdata[yPos + 1][xPos] = 9
+        setyPos(yPos + 1)
+        setMap(mapdata)
+      }
     }
     if (x === -1) {
-      if (movementCheck(xPos - 1, yPos)) setxPos(xPos - 1)
+      if (movementCheck(xPos - 1, yPos)) {
+        mapdata = mapHook
+        mapdata[yPos][xPos] = 0
+        mapdata[yPos][xPos - 1] = 9
+        setxPos(xPos - 1)
+        setMap(mapdata)
+      }
     }
     if (x === 1) {
-      if (movementCheck(xPos + 1, yPos)) setxPos(xPos + 1)
+      if (movementCheck(xPos + 1, yPos)) {
+        mapdata = mapHook
+        mapdata[yPos][xPos] = 0
+        mapdata[yPos][xPos + 1] = 9
+        setxPos(xPos + 1)
+        setMap(mapdata)
+      }
     }
   }
 
@@ -102,22 +137,9 @@ function Character() {
 };
 
   return (
+    <div onKeyPress={() => handleKeyboardInput()}       id="inner" tabindex="0">
+      <Maps mapdata={mapHook} />
 
-    <div
-      style={{
-        backgroundColor: tileColor,
-        height: '50px',
-        width: '50px',
-        marginLeft: -1100 + (96 * xPos),
-        marginTop: -795 + (100 * yPos),
-        margin: '5px',
-        flexDirection: 'row',
-        position: 'absolute'
-      }}
-      ref={inputRef}
-      id="inner" tabindex="0"
-      onKeyPress={() => handleKeyboardInput()}
-    >
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -129,12 +151,13 @@ function Character() {
         }}>
         <Fade in={open}>
           <Box sx={styleFight}>
-            <Battle endBattle={setOpen} />
+            <Battle endBattle={setOpen} msg={modalMsg} />
           </Box>
         </Fade>
       </Modal>
     </div>
-  );
+  )
+
 }
 
-export default Character;
+export default GEngine;
